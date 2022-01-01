@@ -4,12 +4,12 @@ application stack. The following question often arises - "Where will MySQL run? 
 container or run it separately?" In general, **each container should do one thing and do it well.** A few
 reasons:
 
-- There's a good chance you'd have to scale APIs and front-ends differently than databases
-- Separate containers let you version and update versions in isolation
+- There's a good chance you'd have to scale APIs and front-ends differently than databases.
+- Separate containers let you version and update versions in isolation.
 - While you may use a container for the database locally, you may want to use a managed service
   for the database in production. You don't want to ship your database engine with your app then.
 - Running multiple processes will require a process manager (the container only starts one process), 
-  which adds complexity to container startup/shutdown
+  which adds complexity to container startup/shutdown.
 
 And there are more reasons. So, we will update our application to work like this:
 
@@ -66,6 +66,11 @@ For now, we will create the network first and attach the MySQL container at star
         You'll notice we're using a volume named `todo-mysql-data` here and mounting it at `/var/lib/mysql`, which is
         where MySQL stores its data. However, we never ran a `docker volume create` command. Docker recognizes we want
         to use a named volume and creates one automatically for us.
+        
+    !!! info "Troubleshooting"
+        If you see a `docker: no matching manifest` error, it's because you're trying to run the container in a different
+        architecture than amd64, which is the only supported architecture for the mysql image at the moment. To solve this
+        add the flag `--platform linux/amd64` in the previous command
 
 1. To confirm we have the database up and running, connect to the database and verify it connects.
 
